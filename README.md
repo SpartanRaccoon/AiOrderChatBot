@@ -1,22 +1,91 @@
-# ARG AI Order Web System
+# RAG AI Order Web System   By SpartanRaccon
 
-An intelligent order management system combining OpenAI and LangChain, providing AI-driven conversational ordering service.
+An intelligent order management system combining OpenAI and LangChain, providing AI-driven conversational ordering service with advanced RAG (Retrieval Augmented Generation) capabilities.
 
-## Features
+## Key Features
 
-- 🤖 AI Conversation: Natural dialogue using OpenAI API
-- 📚 Knowledge Base: RAG implementation with LangChain + FAISS
-- 🔄 Real-time Updates: WebSocket for instant order status updates
-- 📊 Order Management: Complete order lifecycle management
-- 🎯 Customization: Flexible order customization options
+### 🤖 AI Conversation System
+- Natural language processing using OpenAI's GPT models
+- Context-aware responses maintaining conversation history
+- Dynamic system prompts for consistent AI personality
+- Intelligent order processing and recommendation system
 
-## Tech Stack
+### 📚 Advanced RAG Implementation
+- **Document Processing**:
+  - Multi-format support (TXT, PDF, PowerPoint)
+  - Automatic text chunking and embedding
+  - Dynamic knowledge base updates
 
+- **Vector Search**:
+  - FAISS vector database integration
+  - Semantic similarity search
+  - Real-time query enhancement
+
+- **Knowledge Integration**:
+  - Menu and product information retrieval
+  - Dynamic pricing and availability updates
+  - Contextual recommendations
+
+### 🔄 Real-time System
+- WebSocket for instant order status updates
+- Live chat interface with typing indicators
+- Real-time inventory synchronization
+
+### 📊 Order Management
+- Complete order lifecycle management
+- Order history and analytics
+- Status tracking and notifications
+
+### 🎯 Customization
+- Flexible order customization options
+- Dynamic menu modifications
+- Personalized user preferences
+
+## Technical Implementation
+
+### Core Technologies
 - Python 3.8+
 - Flask + Flask-SocketIO
 - SQLAlchemy + SQLite
-- OpenAI API
-- LangChain + FAISS
+
+### AI & NLP
+- OpenAI GPT API
+  - Role-based system prompts
+  - Context management
+  - Response streaming
+
+### RAG Architecture
+- LangChain
+  - Document loaders for multiple formats
+  - Text splitters for optimal chunking
+  - OpenAI embeddings for vectorization
+- FAISS Vector Database
+  - High-performance similarity search
+  - In-memory vector storage
+  - Fast nearest neighbor search
+
+### Real-time Communication
+- WebSocket protocol
+- Asynchronous event handling
+- Real-time data synchronization
+
+## System Architecture
+
+```
++------------------+     +-------------------+     +------------------+
+|   Client Side    |     |   Server Side     |     |   AI & RAG Layer  |
++------------------+     +-------------------+     +------------------+
+| - Web Interface  |     | - Flask Server    |     | - OpenAI API     |
+| - WebSocket      |<--->| - SocketIO        |<--->| - LangChain      |
+| - Real-time UI   |     | - SQLAlchemy      |     | - FAISS DB       |
++------------------+     +-------------------+     +------------------+
+                         |   Knowledge Base   |
+                         +-------------------+
+                         | - Menu Data       |
+                         | - Product Info    |
+                         | - Order History   |
+                         +-------------------+
+```
 
 ## Installation
 
