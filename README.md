@@ -1,16 +1,16 @@
-# ARG AI 訂單 Web 系統
+# ARG AI Order Web System
 
-結合 OpenAI 和 LangChain 的智能訂單管理系統，提供 AI 對話式訂單服務。
+An intelligent order management system combining OpenAI and LangChain, providing AI-driven conversational ordering service.
 
-## 功能特點
+## Features
 
-- 🤖 AI 智能對話：整合 OpenAI API 實現自然對話
-- 📚 知識庫管理：使用 LangChain + FAISS 實現 RAG
-- 🔄 即時更新：WebSocket 實現即時訂單狀態更新
-- 📊 訂單管理：完整的訂單生命週期管理
-- 🎯 客製化：支持訂單客製化選項
+- 🤖 AI Conversation: Natural dialogue using OpenAI API
+- 📚 Knowledge Base: RAG implementation with LangChain + FAISS
+- 🔄 Real-time Updates: WebSocket for instant order status updates
+- 📊 Order Management: Complete order lifecycle management
+- 🎯 Customization: Flexible order customization options
 
-## 技術棧
+## Tech Stack
 
 - Python 3.8+
 - Flask + Flask-SocketIO
@@ -18,15 +18,15 @@
 - OpenAI API
 - LangChain + FAISS
 
-## 安裝步驟
+## Installation
 
-1. 克隆專案：
+1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/arg-ai-order.git
-cd arg-ai-order
+git clone https://github.com/SpartanRaccoon/AiOrderChatBot.git
+cd AiOrderChatBot
 ```
 
-2. 創建虛擬環境：
+2. Create virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
@@ -34,56 +34,56 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate  # Windows
 ```
 
-3. 安裝依賴：
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. 設置環境變數：
+4. Set up environment variables:
 ```bash
 cp .env.example .env
 ```
-編輯 `.env` 文件，填入必要的配置信息
+Edit the `.env` file with your configuration
 
-5. 初始化數據庫：
+5. Initialize database:
 ```bash
 python init_db.py
 ```
 
-6. 運行應用：
+6. Run the application:
 ```bash
 python app.py
 ```
 
-訪問 http://localhost:8080 開始使用
+Visit http://localhost:8080 to start using the application
 
-## 配置
+## Configuration
 
-在 `.env` 文件中配置以下參數：
+Configure the following parameters in your `.env` file:
 
-- `OPENAI_API_KEY`：OpenAI API 密鑰
-- `FLASK_ENV`：運行環境（development/production）
-- `SECRET_KEY`：Flask 密鑰
-- `SQLALCHEMY_DATABASE_URI`：數據庫連接 URI
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `FLASK_ENV`: Runtime environment (development/production)
+- `SECRET_KEY`: Flask secret key
+- `SQLALCHEMY_DATABASE_URI`: Database connection URI
 
-## 目錄結構
+## Project Structure
 
 ```
 .
-├── app.py              # 主應用程序
-├── models.py           # 數據庫模型
-├── init_db.py         # 數據庫初始化腳本
-├── requirements.txt    # 依賴包列表
-├── templates/         # HTML 模板
-├── uploads/           # 上傳文件存儲
-└── instance/          # 實例配置
+├── app.py              # Main application
+├── models.py           # Database models
+├── init_db.py         # Database initialization script
+├── requirements.txt    # Dependencies list
+├── templates/         # HTML templates
+├── uploads/           # File upload storage
+└── instance/          # Instance configuration
 ```
 
-## 貢獻
+## Contributing
 
-歡迎提交 Issue 和 Pull Request！
+Issues and Pull Requests are welcome!
 
-## 授權
+## License
 
 MIT License
 
