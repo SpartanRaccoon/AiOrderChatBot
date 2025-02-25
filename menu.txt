@@ -1,0 +1,59 @@
+
+
+## **🌟 Gourmet Restaurant Menu with Prices 🌟**  
+
+### **🥗 Appetizers**  
+1. **Truffle-Infused Burrata** – Fresh burrata cheese drizzled with black truffle oil, served with arugula and cherry tomatoes. **$18**  
+2. **Seared Ahi Tuna** – Lightly seared tuna with a sesame crust, served with wasabi mayo and ponzu sauce. **$22**  
+3. **Foie Gras Crostini** – Pan-seared foie gras on crispy baguette slices, topped with caramelized apples. **$28**  
+4. **Crispy Calamari** – Golden fried calamari with lemon aioli and marinara dipping sauce. **$16**  
+5. **Beef Carpaccio** – Thinly sliced raw beef with capers, arugula, Parmesan, and truffle vinaigrette. **$24**  
+
+---
+
+### **🍜 Soups**  
+1. **Lobster Bisque** – Creamy lobster soup with a touch of cognac and fresh herbs. **$18**  
+2. **French Onion Soup** – Slow-cooked caramelized onions in a beef broth, topped with melted Gruyère cheese. **$14**  
+3. **Tom Yum Goong** – Thai hot and sour shrimp soup with lemongrass, kaffir lime, and chili. **$16**  
+4. **Miso Soup** – Traditional Japanese miso soup with tofu, seaweed, and scallions. **$10**  
+5. **Cream of Mushroom** – A rich and velvety mushroom soup with a hint of truffle oil. **$14**  
+
+---
+
+### **🍽️ Main Courses**  
+1. **Wagyu Beef Steak** – Premium Wagyu steak cooked to perfection, served with garlic butter and truffle mashed potatoes. **$85**  
+2. **Grilled Chilean Sea Bass** – Pan-seared sea bass with saffron butter sauce, served with asparagus and wild rice. **$42**  
+3. **Lobster Thermidor** – Baked lobster in a creamy brandy sauce, topped with Gruyère cheese. **$60**  
+4. **Duck Confit** – Slow-cooked duck leg with crispy skin, served with red wine reduction and roasted vegetables. **$38**  
+5. **Pasta Primavera** – Fresh pasta tossed with seasonal vegetables, garlic, and extra virgin olive oil. **$28**  
+6. **Lamb Shank Osso Buco** – Braised lamb shank in a rich red wine sauce, served with risotto Milanese. **$48**  
+7. **Black Truffle Risotto** – Creamy risotto with shaved black truffles and Parmesan. **$40**  
+
+---
+
+### **🍰 Desserts**  
+1. **Molten Chocolate Lava Cake** – Warm chocolate cake with a gooey center, served with vanilla bean ice cream. **$14**  
+2. **Crème Brûlée** – Classic French vanilla custard with a caramelized sugar crust. **$12**  
+3. **Tiramisu** – Layers of espresso-soaked ladyfingers, mascarpone cheese, and cocoa powder. **$14**  
+4. **New York Cheesecake** – Rich and creamy cheesecake with a graham cracker crust and berry compote. **$12**  
+5. **Mango Sticky Rice** – Thai-style coconut sticky rice with fresh mango slices. **$14**  
+
+---
+
+### **🥂 Beverages**  
+**Non-Alcoholic:**  
+- **Freshly Squeezed Orange Juice** – **$6**  
+- **Sparkling Water (San Pellegrino)** – **$5**  
+- **Matcha Green Tea** – **$7**  
+- **Cold Brew Coffee** – **$6**  
+
+**Alcoholic:**  
+- **Classic Martini** – **$14**  
+- **Red Wine (Cabernet Sauvignon, Merlot)** – **$15/glass, $60/bottle**  
+- **White Wine (Chardonnay, Sauvignon Blanc)** – **$14/glass, $55/bottle**  
+- **Champagne (Moët & Chandon)** – **$22/glass, $100/bottle**  
+- **Japanese Whisky (Hibiki 17)** – **$30/glass**  
+
+---
+
+Would you like this menu customized for a specific type of restaurant (e.g., Italian, Japanese, Steakhouse)? 😊

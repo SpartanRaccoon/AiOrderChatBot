@@ -1,0 +1,9 @@
+flask==2.3.3
+openai==0.28.0
+langchain==0.0.300
+python-dotenv==1.0.0
+SQLAlchemy==2.0.21
+python-multipart==0.0.6
+pydantic==2.3.0
+PyPDF2==3.0.1
+python-pptx==0.6.21

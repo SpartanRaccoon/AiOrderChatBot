@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 訂單系統 - 管理後台</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">管理後台</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- 系統提示詞設置 -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">系統提示詞設置</h2>
+                <form id="promptForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">AI 店員設定</label>
+                        <textarea id="systemPrompt" rows="4" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                placeholder="設定 AI 店員的個性和行為..."></textarea>
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        更新設定
+                    </button>
+                </form>
+            </div>
+
+            <!-- 文件上傳 -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">知識庫文件上傳</h2>
+                <form id="uploadForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">上傳菜單或商品資訊</label>
+                        <input type="file" id="documentFile" 
+                               class="mt-1 block w-full text-sm text-gray-500
+                                      file:mr-4 file:py-2 file:px-4
+                                      file:rounded-md file:border-0
+                                      file:text-sm file:font-semibold
+                                      file:bg-blue-50 file:text-blue-700
+                                      hover:file:bg-blue-100"/>
+                        <p class="mt-1 text-sm text-gray-500">支援 .txt 或 .pdf 格式</p>
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        上傳文件
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 狀態提示 -->
+        <div id="statusMessage" class="mt-8 hidden">
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded" role="alert">
+                <p class="font-bold">成功！</p>
+                <p id="statusText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const promptForm = document.getElementById('promptForm');
+        const uploadForm = document.getElementById('uploadForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusText = document.getElementById('statusText');
+
+        function showStatus(message, isError = false) {
+            statusMessage.className = `mt-8 ${isError ? 'bg-red-100 border-red-500 text-red-700' : 'bg-green-100 border-green-500 text-green-700'} border-l-4 p-4 rounded`;
+            statusText.textContent = message;
+            statusMessage.classList.remove('hidden');
+            setTimeout(() => statusMessage.classList.add('hidden'), 3000);
+        }
+
+        // 更新系統提示詞
+        promptForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = document.getElementById('systemPrompt').value;
+            
+            try {
+                const response = await fetch('/admin/prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt }),
+                });
+                
+                const data = await response.json();
+                showStatus(data.message);
+            } catch (error) {
+                showStatus('更新失敗：' + error.message, true);
+            }
+        });
+
+        // 上傳文件
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('documentFile').files[0];
+            if (!file) {
+                showStatus('請選擇要上傳的文件', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/admin/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                showStatus(data.message);
+            } catch (error) {
+                showStatus('上傳失敗：' + error.message, true);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能點餐助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            background: #000000;
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #e2e8f0;
+            line-height: 1.4;
+            overflow: hidden;
+        }
+        .app-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #000000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .chat-header {
+            padding: 16px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            color: #f1f5f9;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+        }
+        .chat-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-body::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.1);
+        }
+        .chat-body::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 3px;
+        }
+        .message {
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 20px;
+            margin: 6px 0;
+            max-width: 100%;
+            width: 100%;
+        }
+        .message-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            margin: 0 10px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .message-content {
+            max-width: 85%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border-radius: 16px;
+            word-break: break-word;
+            line-height: 1.6;
+            position: relative;
+            margin: 0 12px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        .message-content .order-card {
+            margin: 8px 0;
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        /* 訂單卡片樣式 */
+        .order-card {
+            background: rgba(30, 41, 59, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 12px 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                       0 0 0 1px rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .order-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #60a5fa;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-total {
+            font-size: 18px;
+            font-weight: 600;
+            color: #34d399;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            padding: 6px 12px;
+            background: rgba(52, 211, 153, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateX(4px);
+            border-radius: 8px;
+            padding: 12px 8px;
+        }
+
+        .item-details {
+            flex: 1;
+            margin-right: 16px;
+        }
+
+        .item-name {
+            font-size: 16px;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .item-options {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 4px;
+            padding: 4px 8px;
+            background: rgba(148, 163, 184, 0.1);
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .item-price {
+            font-size: 16px;
+            color: #f1f5f9;
+            font-weight: 500;
+            padding: 4px 8px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .order-total {
+            font-size: 16px;
+            font-weight: 600;
+            color: #34d399;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            font-size: 15px;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+        .item-options {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .item-price {
+            font-size: 15px;
+            color: #f1f5f9;
+            margin-left: 16px;
+        }
+        .user-message {
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        .user-message .message-content {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #f1f5f9;
+            border-bottom-right-radius: 4px;
+            margin-right: 4px;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+            margin-left: auto;
+        }
+        .ai-message .message-content {
+            background: rgba(75, 50, 120, 0.823);
+            color: #f1f5f9;
+            border-bottom-left-radius: 4px;
+            margin-left: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: inherit !important;
+        }
+        .table-container {
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin: 20px 0;
+            padding: 1px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                       inset 0 0 0 1px rgba(148, 163, 184, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .markdown-body table {
+            display: table;
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: transparent;
+            overflow: hidden;
+        }
+        .markdown-body table th,
+        .markdown-body table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            color: #f8fafc;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .markdown-body table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(59, 130, 246, 0.25);
+            color: #93c5fd;
+            font-size: 13px;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        .markdown-body table td:first-child {
+            font-weight: 500;
+        }
+        .markdown-body table td:nth-child(2) {
+            font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        }
+        .markdown-body table tr:last-child td {
+            border-bottom: none;
+        }
+        .markdown-body table tr {
+            transition: all 0.2s ease;
+        }
+        .markdown-body table tr:hover td {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateX(4px);
+            transition: all 0.3s ease;
+        }
+        .markdown-body table tr:last-child td {
+            border-bottom: none;
+        }
+        .markdown-body table td:first-child {
+            font-weight: 500;
+            color: #60a5fa;
+        }
+        .markdown-body table tr:nth-child(2n) {
+            background: rgba(30, 41, 59, 0.4);
+        }
+        .markdown-body table tr:hover td:first-child::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
+            opacity: 0.8;
+        }
+        .markdown-body h3 {
+            color: #f8fafc;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-body p {
+            margin: 0.8em 0;
+            line-height: 1.6;
+        }
+        .markdown-body ul {
+            margin: 0.8em 0;
+            padding-left: 1.2em;
+        }
+        .markdown-body li {
+            margin: 0.4em 0;
+            line-height: 1.6;
+        }
+        .chat-footer {
+            background: #f8f8f8;
+            padding: 8px 12px;
+            border-top: 1px solid #ddd;
+        }
+        /* 改进表格样式 */
+        .markdown-body table {
+            width: 100%;
+            background: white;
+            border: 1px solid #d1d5db;
+            margin: 1rem 0;
+            border-collapse: collapse;
+        }
+        .markdown-body table th {
+            background: #050708;
+            color: #e5ebf2;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .markdown-body table th,
+        .markdown-body table td {
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+        }
+        .markdown-body table tr {
+            background: white;
+        }
+        .markdown-body table tr:nth-child(2n) {
+            background: #f9fafb;
+        }
+        .markdown-body table td {
+            color: rgb(12, 12, 12);
+            font-size: 0.875rem;
+        }
+        .markdown-body h3 {
+            color: #f8fafc;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 1.5rem 0 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+            letter-spacing: 0.05em;
+        }
+        /* 改进消息样式 */
+        .ai-message {
+            
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        /* 确保表格在移动设备上可以滚动 */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1em 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* 改进标题样式 */
+        .markdown-body h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            padding-bottom: 0.3em;
+            border-bottom: 2px solid #4a5568;
+            color: #fafafa;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="app-container">
+        <div class="chat-header">
+            智能點餐助手
+        </div>
+        
+        <div class="chat-body" id="chat-container">
+            <div class="ai-message message">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Xiang" alt="AI" class="message-avatar">
+                <div class="message-content markdown-body">
+                    您好！我是您的智能服務員小晴。請問需要什麼幫助嗎？
+                </div>
+            </div>
+        </div>
+            
+            <div class="chat-footer" style="background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid rgba(148, 163, 184, 0.1); padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px; max-width: 800px; margin: 0 auto;">
+                    <input type="text" id="user-input" 
+                           style="flex: 1; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); font-size: 15px; color: #f1f5f9; border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);"
+                           placeholder="輸入訂單內容..."
+                           onFocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 2px rgba(59, 130, 246, 0.2)'"
+                           onBlur="this.style.borderColor='rgba(148, 163, 184, 0.2)'; this.style.boxShadow='none'">
+                    <button onclick="sendMessage()" 
+                            style="padding: 12px 24px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #f1f5f9; font-size: 15px; border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-weight: 500; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);"
+                            onMouseOver="this.style.opacity='0.9'"
+                            onMouseOut="this.style.opacity='1'">
+                        發送
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function addMessage(content, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            
+            // 创建头像元素
+            const avatar = document.createElement('img');
+            avatar.className = 'message-avatar';
+            if (isUser) {
+                avatar.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmYjZjMSIvPjxjaXJjbGUgY3g9IjgiIGN5PSIxMCIgcj0iMS41IiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxMCIgcj0iMS41IiBmaWxsPSIjMDAwIi8+PHBhdGggZD0iTTcgMTMgQzcgMTMgMTAgMTYgMTcgMTMiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik00IDEwIEM0IDEwIDYgNSAxMiA1IEMxOCA1IDIwIDEwIDIwIDEwIiBzdHJva2U9IiNmZjY5YjQiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==';
+                avatar.alt = 'User';
+            } else {
+                avatar.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzk1YjhmZiIvPjxjaXJjbGUgY3g9IjgiIGN5PSIxMCIgcj0iMS41IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxMCIgcj0iMS41IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTcgMTMgQzcgMTMgMTAgMTYgMTcgMTMiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik00IDEwIEM0IDEwIDYgNSAxMiA1IEMxOCA1IDIwIDEwIDIwIDEwIiBzdHJva2U9IiM2NGEwZmYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==';
+                avatar.alt = 'AI';
+            }
+            messageDiv.appendChild(avatar);
+
+            // 创建消息内容容器
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content markdown-body';
+            
+            if (isUser) {
+                contentDiv.textContent = content;
+            } else {
+                try {
+                    // 先尝试解析 JSON
+                    let jsonData = content;
+                    if (typeof content === 'string') {
+                        jsonData = JSON.parse(content);
+                    }
+                    
+                    // 检查是否是订单
+                    if (jsonData && jsonData.is_order === true && jsonData.items) {
+                        // 不显示原始 JSON，直接渲染 Markdown 内容
+                        contentDiv.innerHTML = marked.parse(jsonData.message || '');
+                    } else {
+                        // 不是订单，渲染为 Markdown
+                        contentDiv.innerHTML = marked.parse(typeof content === 'string' ? content : JSON.stringify(content));
+                    }
+                } catch (e) {
+                    console.log('JSON 解析错误:', e); // 调试日志
+                    // 如果解析失败，直接渲染原始内容
+                    contentDiv.innerHTML = marked.parse(content);
+                }
+
+                // 为表格添加额外的样式和容器
+                const tables = contentDiv.getElementsByTagName('table');
+                for (let table of tables) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-container';
+                    wrapper.style.cssText = 'overflow-x: auto; margin: 1em 0;';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+                
+                // 确保链接在新窗口打开
+                const links = contentDiv.getElementsByTagName('a');
+                for (let link of links) {
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                }
+            }
+            
+            messageDiv.appendChild(contentDiv);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            userInput.value = '';
+            userInput.disabled = true;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message }),
+                });
+
+                const data = await response.json();
+                console.log('服务器响应:', data); // 调试日志
+                
+                let responseContent = data.response || data;
+                console.log('处理后的响应:', responseContent); // 调试日志
+
+                // 如果是字符串，尝试解析 JSON
+                if (typeof responseContent === 'string' && responseContent.trim().startsWith('{')) {
+                    try {
+                        responseContent = JSON.parse(responseContent);
+                        console.log('解析后的 JSON:', responseContent); // 调试日志
+                    } catch (e) {
+                        console.log('JSON 解析错误:', e); // 调试日志
+                    }
+                }
+
+                // 检查是否是订单格式
+                if (responseContent && responseContent.is_order === true) {
+                    console.log('检测到订单数据:', responseContent);
+                    // 直接使用对象而不是字符串
+                    addMessage(JSON.stringify(responseContent), false);
+                } else {
+                    // 不是订单数据，显示普通回复
+                    const textToShow = typeof responseContent === 'object' ? 
+                        JSON.stringify(responseContent) : responseContent;
+                    addMessage(textToShow, false);
+                }
+            } catch (error) {
+                addMessage('抱歉，發生錯誤，請稍後再試。', false);
+                console.error('Error:', error);
+            }
+
+            userInput.disabled = false;
+            userInput.focus();
+        }
+    </script>
+</body>
+</html>
