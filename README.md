@@ -1,6 +1,8 @@
 # RAG AI Order Web System   By SpartanRaccon
 
 An intelligent order management system combining OpenAI and LangChain, providing AI-driven conversational ordering service with advanced RAG (Retrieval Augmented Generation) capabilities.
+![image](https://github.com/user-attachments/assets/83ea2c69-a1f5-4424-9587-91c15b4a9bce)
+![image](https://github.com/user-attachments/assets/e8612fb8-a3c5-435a-accc-93d2ded797bd)
 
 ## Key Features
 
